@@ -1,0 +1,53 @@
+apply plugin: 'java'
+apply plugin: 'com.google.protobuf'
+
+group 'top.lllyl2012'
+version '1.0-SNAPSHOT'
+
+sourceCompatibility = 1.8
+
+repositories {
+    maven {
+        name "aliyunmaven"
+        url "http://maven.aliyun.com/nexus/content/groups/public/"
+    }
+}
+
+dependencies {
+    compile (
+            "io.netty:netty-all:4.1.34.Final",
+            'io.grpc:grpc-netty-shaded:1.19.0',
+            'io.grpc:grpc-protobuf:1.19.0',
+            'io.grpc:grpc-stub:1.19.0'
+    )
+}
+
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'com.google.protobuf:protobuf-gradle-plugin:0.8.5'
+    }
+}
+
+protobuf {
+    protoc {
+        artifact = "com.google.protobuf:protoc:3.6.1"
+    }
+    plugins {
+        grpc {
+            artifact = 'io.grpc:protoc-gen-grpc-java:1.19.0'
+        }
+    }
+
+    generateProtoTasks.generatedFilesBaseDir = "src"
+
+    generateProtoTasks {
+        all()*.plugins {
+            grpc {
+                setOutputSubDir "java"
+            }
+        }
+    }
+}
